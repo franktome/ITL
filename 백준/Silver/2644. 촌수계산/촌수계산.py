@@ -1,42 +1,29 @@
 import sys
-from collections import deque
 
-# 1. 변수들 입력받기
-n = int(sys.stdin.readline())
-a, b = map(int, sys.stdin.readline().split())
-r = int(sys.stdin.readline())
+# 1. 인자들 입력받기
+n=int(sys.stdin.readline())
+a,b = map(int,sys.stdin.readline().split())
+r=int(sys.stdin.readline())
+graph=[[] for _ in range(n+1)] # linked list로 구현할 때는 이렇게 구현해야 되는구나!!
+visited = [0]*(n+1)
+for _ in range(r):
+    x,y=map(int,sys.stdin.readline().split())
+    graph[x].append(y)
+    graph[y].append(x)
 
-# 2. 그래프 생성하기(linked list)
-graph=[[-1 for _ in range(n+1)] for _ in range(n+1)]
-graph[a][a]=0
+# 2. dfs로 돌면서 b에 도달할 때가지 거리 계산하기
+def dfs(node):
+    for x in graph[node]:
+        if visited[x]==0:
+            visited[x]=visited[node]+1
+            if x==b:
+                break
+            else:
+                dfs(x)
 
-for i in range(r):
-    x, y = map(int, sys.stdin.readline().split())
-    graph[x][y] = 0
-    graph[y][x] = 0
-
-# 3. 시작점 입력받아서 그 점으로부터 bfs 돌리기(기존 그래프에다가 업데이트)
-def bfs(x):
-    queue = deque([[x,x]])
-    while(queue):
-        x1, y1 = queue.popleft()
-        if y1==b:
-            break
-        for i in range(1, n+1):
-            if x1 !=i and graph[y1][i]==0:
-                graph[y1][i] = graph[x1][y1] + 1
-                graph[i][y1] = graph[x1][y1] + 1
-                queue.append([y1,i])
-
-
-# 4. 결과 출력하기
-bfs(a)
-
-mx=0
-for i in range(1,n+1):
-    if graph[b][i]>0:
-        mx=max(mx, graph[b][i])
-if mx==0:
+# 3. 결과 출력하기
+dfs(a)
+if visited[b]==0:
     print(-1)
 else:
-    print(mx)
+    print(visited[b])
