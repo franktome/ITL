@@ -1,12 +1,7 @@
-# 1. 입력을 받는다.
-# 2. 양수는 내림차순으로 정렬하여 2개씩 묶는다.
-# 3. 음수도 내림차순으로 정렬하여 2개씩 묶는다.
-# 3. 0은 음수가 있으면 없애고 없다면 그냥 무시
-# 4. 1은 무조건 더한다.
-
 import sys
-n = int(sys.stdin.readline().strip())
-arr=[int(sys.stdin.readline().strip()) for _ in range(n)]
+input=sys.stdin.readline
+n = int(input().strip())
+arr=[int(input().strip()) for _ in range(n)]
 
 plus=[]
 minus=[]
@@ -20,7 +15,7 @@ for i in range(n):
         plus.append(arr[i])
     elif arr[i]<0:
         minus.append(arr[i])
-    elif arr[i]==0:
+    elif arr[i]==0: # zero flag : 만약 음수가 나오면 음수를 없앨 수 있다.
         zero=1
 
 plus.sort(reverse=True)
@@ -38,5 +33,6 @@ for i in range(0,len(minus),2):
     else :
         if zero==0:
             sum += minus[i]
-
+        else: # 만약 zero가 1이라면 0이 있다는 뜻이므로 마지막 항은 안 더해도 된다.
+            continue
 print(sum)
